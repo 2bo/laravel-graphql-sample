@@ -1,6 +1,6 @@
 # Laravel GraphQL Sample
 
-This is sample project implements GraphQL on Laravel with LightHouse.
+This is sample project implements GraphQL on Laravel with Lighthouse.
 
 ## How to use
 
