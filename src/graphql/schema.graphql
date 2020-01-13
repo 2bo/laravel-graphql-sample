@@ -116,3 +116,14 @@ input UpsertCommentInput {
     reply: String
 }
 
+# default setting when exec `php artisan vendor:publish --provider="Nuwave\Lighthouse\LighthouseServiceProvider" --tag=schema`
+# type User {
+#     id: ID!
+#     name: String!
+#     email: String!
+# }
+#
+# type Query {
+#     user(id: ID! @eq): User @find
+#     users: [User!]! @all
+# }
