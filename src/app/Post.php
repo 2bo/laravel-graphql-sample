@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Post extends Model
 {
+    protected $fillable = ["title", "content"];
+
+    //return type required for Lighthouse
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);

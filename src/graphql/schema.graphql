@@ -4,8 +4,17 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
+type Mutation {
+    #userに紐付いたpostを作成する
+    createPost(input: CreatePostInput! @spread): Post @create
+    #postおよび紐づくcommentを更新する
+    updatePost(input: UpdatePostInput! @spread): Post @update
+    deletePost(id: ID!): Post @delete
 
-# queryのための予約されたルートの型名
+    updateComment(id: ID!, reply: String): Comment @update
+    deleteComment(id: ID!): Comment @delete
+}
+
 type Query {
     user(id: Int! @eq): User @find
     post(id: Int! @eq): Post @find
@@ -66,3 +75,44 @@ enum SortOrder {
     ASC
     DESC
 }
+
+# createPost用
+input CreatePostInput {
+    title: String!
+    content: String!
+    author: CreateUserBelongsTo
+}
+
+input CreateUserBelongsTo {
+    connect: ID
+}
+
+# updatePost用
+input UpdatePostInput {
+    id: ID!
+    title: String
+    content: String
+    comments: UpdateCommentsHasMany
+}
+
+input UpdateCommentsHasMany {
+    create: [CreateCommentInput!]
+    update: [UpdateCommentInput!]
+    upsert: [UpsertCommentInput!]
+    delete: [ID!]
+}
+
+input CreateCommentInput {
+    reply: String!
+}
+
+input UpdateCommentInput {
+    id: ID!
+    reply: String
+}
+
+input UpsertCommentInput {
+    id: ID!
+    reply: String
+}
+
