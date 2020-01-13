@@ -1,0 +1,68 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+
+# queryのための予約されたルートの型名
+type Query {
+    user(id: Int! @eq): User @find
+    post(id: Int! @eq): Post @find
+    comment(id: Int! @eq): Comment @find
+
+    users(
+        name: String @where(operator: "like"),
+        email: String @eq,
+        orderBy: [OrderByClause!] @orderBy
+    ): [User!] @all
+
+    posts(
+        title: String @where(operator: "like"),
+        content: String @where(operator: "like"),
+        orderBy: [OrderByClause!] @orderBy
+    ): [Post!] @paginate(defaultCount: 20)
+
+    comments(
+        reply: String @where(operator: "like"),
+        orderBy: [OrderByClause!] @orderBy
+    ): [Comment!] @paginate(defaultCount: 20)
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    posts: [Post!]! @hasMany
+}
+
+type Post {
+    id: ID!
+    title: String!
+    content: String!
+    author: User! @belongsTo
+    comments: [Comment!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Comment {
+    id: ID!
+    reply: String!
+    post: Post! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+# order by用
+input OrderByClause {
+    field: String!
+    order: SortOrder!
+}
+
+enum SortOrder {
+    ASC
+    DESC
+}
